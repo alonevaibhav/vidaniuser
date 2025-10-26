@@ -223,7 +223,7 @@ class AnalysisScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppTheme.space20),
       decoration: BoxDecoration(
-        gradient: AppTheme.successGradient,
+        // gradient: AppTheme.successGradient,
         borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
         boxShadow: Theme.of(context).brightness == Brightness.dark
             ? AppTheme.darkShadowMedium

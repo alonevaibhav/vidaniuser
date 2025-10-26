@@ -319,7 +319,7 @@ class EnergyProductionCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppTheme.space20),
       decoration: BoxDecoration(
-        gradient: AppTheme.energyGradient,
+        // gradient: AppTheme.energyGradient,
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
         boxShadow: AppTheme.shadowMedium,
       ),

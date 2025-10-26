@@ -198,9 +198,9 @@ class ProfileScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppTheme.space20),
       decoration: BoxDecoration(
-        gradient: Theme.of(context).brightness == Brightness.dark
-            ? AppTheme.darkPrimaryGradient
-            : AppTheme.primaryGradient,
+        // gradient: Theme.of(context).brightness == Brightness.dark
+        //     ? AppTheme.darkPrimaryGradient
+        //     : AppTheme.primaryGradient,
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
         boxShadow: Theme.of(context).brightness == Brightness.dark
             ? AppTheme.darkShadowMedium

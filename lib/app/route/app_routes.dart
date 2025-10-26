@@ -70,7 +70,6 @@
 
 
 import 'package:go_router/go_router.dart';
-import '../modules/ButtomNevigation/main_controller.dart';
 import '../modules/ButtomNevigation/main_screen.dart';
 import '../modules/splash/splash_screen.dart';
 import 'app_bindings.dart';
@@ -107,26 +106,6 @@ class AppRoutes {
         path: mainDashboard,
         builder: (context, state) => const MainScreen(),
       ),
-
-      // Auth Routes
-      // GoRoute(
-      //   path: login,
-      //   pageBuilder: (context, state) => MaterialPage(
-      //     fullscreenDialog: true,
-      //     child: const LoginView(),
-      //   ),
-      // ),
-
-      // GoRoute(
-      //   path: signup,
-      //   pageBuilder: (context, state) => MaterialPage(
-      //     fullscreenDialog: true,
-      //     child: const SignupView(),
-      //   ),
-      // ),
-
-
-
 
     ],
   );
