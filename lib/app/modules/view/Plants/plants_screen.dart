@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import '../../../core/Theme/app_theme.dart';
 
 class PlantsScreen extends StatelessWidget {
@@ -12,6 +11,8 @@ class PlantsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: SafeArea(
@@ -19,16 +20,17 @@ class PlantsScreen extends StatelessWidget {
           slivers: [
             SliverAppBar(
               floating: true,
+              backgroundColor: colorScheme.surface,
               title: Text(
                 'Solar Plants',
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: textTheme.headlineMedium,
               ),
               actions: [
                 IconButton(
-                  icon: Icon(PhosphorIcons.funnel()),
+                  icon: Icon(
+                    PhosphorIcons.funnel(PhosphorIconsStyle.regular),
+                    color: colorScheme.onSurface,
+                  ),
                   onPressed: () {},
                 ),
                 Gap(AppTheme.space8),
@@ -38,17 +40,16 @@ class PlantsScreen extends StatelessWidget {
               padding: EdgeInsets.all(AppTheme.space16),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  _buildOverviewCard(context),
-                  Gap(AppTheme.space20),
+                  _buildOverviewCard(context, isDark),
+                  Gap(AppTheme.space24),
                   Text(
                     'Your Plants',
-                    style: textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: textTheme.headlineSmall,
                   ),
                   Gap(AppTheme.space16),
-                  buildPlantCard(
+                  _buildPlantCard(
                     context,
+                    isDark: isDark,
                     name: 'Rooftop Solar A',
                     location: 'Building 1, Pimpri',
                     capacity: '30 kW',
@@ -58,8 +59,9 @@ class PlantsScreen extends StatelessWidget {
                     lastCleaned: '2 days ago',
                   ),
                   Gap(AppTheme.space16),
-                  buildPlantCard(
+                  _buildPlantCard(
                     context,
+                    isDark: isDark,
                     name: 'Ground Mount B',
                     location: 'Plot 5, Pune',
                     capacity: '50 kW',
@@ -69,7 +71,8 @@ class PlantsScreen extends StatelessWidget {
                     lastCleaned: '5 days ago',
                   ),
                   Gap(AppTheme.space16),
-                  _buildAddPlantCard(context),
+                  _buildAddPlantCard(context, isDark),
+                  Gap(AppTheme.space24),
                 ]),
               ),
             ),
@@ -79,17 +82,15 @@ class PlantsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOverviewCard(BuildContext context) {
+  Widget _buildOverviewCard(BuildContext context, bool isDark) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: EdgeInsets.all(AppTheme.space20),
       decoration: BoxDecoration(
-        // gradient: Theme.of(context).brightness == Brightness.dark
-        //     ? AppTheme.darkPrimaryGradient
-        //     : AppTheme.primaryGradient,
+        color: colorScheme.primary,
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-        boxShadow: Theme.of(context).brightness == Brightness.dark
-            ? AppTheme.darkShadowMedium
-            : AppTheme.shadowMedium,
+        boxShadow: isDark ? AppTheme.darkShadowMedium : AppTheme.shadowMedium,
       ),
       child: Column(
         children: [
@@ -97,9 +98,17 @@ class PlantsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildStatItem('2', 'Active Plants'),
-              Container(width: 1.w, height: 40.h, color: Colors.white30),
+              Container(
+                width: 1.w,
+                height: 40.h,
+                color: AppTheme.textOnPrimary.withOpacity(0.3),
+              ),
               _buildStatItem('80 kW', 'Total Capacity'),
-              Container(width: 1.w, height: 40.h, color: Colors.white30),
+              Container(
+                width: 1.w,
+                height: 40.h,
+                color: AppTheme.textOnPrimary.withOpacity(0.3),
+              ),
               _buildStatItem('90%', 'Avg Efficiency'),
             ],
           ),
@@ -116,7 +125,7 @@ class PlantsScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: AppTheme.textOnPrimary,
           ),
         ),
         Gap(4.h),
@@ -124,15 +133,17 @@ class PlantsScreen extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 11.sp,
-            color: Colors.white.withOpacity(0.9),
+            fontWeight: FontWeight.w500,
+            color: AppTheme.textOnPrimary.withOpacity(0.9),
           ),
         ),
       ],
     );
   }
 
-  Widget buildPlantCard(
+  Widget _buildPlantCard(
       BuildContext context, {
+        required bool isDark,
         required String name,
         required String location,
         required String capacity,
@@ -149,27 +160,24 @@ class PlantsScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-        boxShadow: Theme.of(context).brightness == Brightness.dark
-            ? AppTheme.darkShadowSmall
-            : AppTheme.shadowSmall,
+        boxShadow: isDark ? AppTheme.darkShadowSmall : AppTheme.shadowSmall,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header Row
           Row(
             children: [
               Container(
                 width: 56.w,
                 height: 56.w,
                 decoration: BoxDecoration(
-                  // gradient: Theme.of(context).brightness == Brightness.dark
-                  //     ? AppTheme.darkPrimaryGradient
-                  //     : AppTheme.primaryGradient,
+                  color: colorScheme.primary,
                   borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                 ),
                 child: Icon(
                   PhosphorIcons.solarPanel(PhosphorIconsStyle.fill),
-                  color: Colors.white,
+                  color: AppTheme.textOnPrimary,
                   size: 28.sp,
                 ),
               ),
@@ -180,9 +188,7 @@ class PlantsScreen extends StatelessWidget {
                   children: [
                     Text(
                       name,
-                      style: textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: textTheme.titleLarge,
                     ),
                     Gap(4.h),
                     Row(
@@ -190,12 +196,18 @@ class PlantsScreen extends StatelessWidget {
                         Icon(
                           PhosphorIcons.mapPin(PhosphorIconsStyle.fill),
                           size: 12.sp,
-                          color: colorScheme.onSurface.withOpacity(0.6),
+                          color: isDark
+                              ? AppTheme.darkTextSecondary
+                              : AppTheme.textSecondary,
                         ),
                         Gap(4.w),
                         Text(
                           location,
-                          style: textTheme.bodySmall,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: isDark
+                                ? AppTheme.darkTextSecondary
+                                : AppTheme.textSecondary,
+                          ),
                         ),
                       ],
                     ),
@@ -204,7 +216,7 @@ class PlantsScreen extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: AppTheme.space8,
+                  horizontal: AppTheme.space12,
                   vertical: AppTheme.space4,
                 ),
                 decoration: BoxDecoration(
@@ -223,6 +235,8 @@ class PlantsScreen extends StatelessWidget {
             ],
           ),
           Gap(AppTheme.space16),
+
+          // Metrics Container
           Container(
             padding: EdgeInsets.all(AppTheme.space12),
             decoration: BoxDecoration(
@@ -232,29 +246,77 @@ class PlantsScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildInfoItem(context, 'Capacity', capacity),
-                _buildInfoItem(context, 'Current', currentOutput),
-                _buildInfoItem(context, 'Efficiency', '$efficiency%'),
+                _buildInfoItem(
+                  context,
+                  'Capacity',
+                  capacity,
+                  PhosphorIcons.lightning(PhosphorIconsStyle.fill),
+                  isDark,
+                ),
+                _buildInfoItem(
+                  context,
+                  'Current',
+                  currentOutput,
+                  PhosphorIcons.facebookLogo(PhosphorIconsStyle.fill),
+                  isDark,
+                ),
+                _buildInfoItem(
+                  context,
+                  'Efficiency',
+                  '$efficiency%',
+                  PhosphorIcons.chartLine(PhosphorIconsStyle.fill),
+                  isDark,
+                ),
               ],
             ),
           ),
           Gap(AppTheme.space12),
+
+          // Footer Row
           Row(
             children: [
               Icon(
                 PhosphorIcons.sparkle(PhosphorIconsStyle.fill),
                 size: 14.sp,
-                color: colorScheme.onSurface.withOpacity(0.6),
+                color: isDark
+                    ? AppTheme.darkTextSecondary
+                    : AppTheme.textSecondary,
               ),
               Gap(6.w),
               Text(
                 'Last cleaned: $lastCleaned',
-                style: textTheme.bodySmall,
+                style: textTheme.bodySmall?.copyWith(
+                  color: isDark
+                      ? AppTheme.darkTextSecondary
+                      : AppTheme.textSecondary,
+                ),
               ),
               const Spacer(),
               TextButton(
                 onPressed: () {},
-                child: Text('View Details'),
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppTheme.space12,
+                    vertical: AppTheme.space8,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'View Details',
+                      style: textTheme.labelMedium?.copyWith(
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                    Gap(4.w),
+                    Icon(
+                      PhosphorIcons.arrowRight(PhosphorIconsStyle.bold),
+                      size: 14.sp,
+                      color: colorScheme.primary,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -263,33 +325,49 @@ class PlantsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoItem(BuildContext context, String label, String value) {
+  Widget _buildInfoItem(
+      BuildContext context,
+      String label,
+      String value,
+      IconData icon,
+      bool isDark,
+      ) {
     final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 11.sp,
-            color: colorScheme.onSurface.withOpacity(0.6),
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                icon,
+                size: 12.sp,
+                color: colorScheme.primary,
+              ),
+              Gap(4.w),
+              Text(
+                label,
+                style: textTheme.labelSmall?.copyWith(
+                  color: isDark
+                      ? AppTheme.darkTextSecondary
+                      : AppTheme.textSecondary,
+                ),
+              ),
+            ],
           ),
-        ),
-        Gap(4.h),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
-            color: colorScheme.onSurface,
+          Gap(4.h),
+          Text(
+            value,
+            style: textTheme.titleMedium,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget _buildAddPlantCard(BuildContext context) {
+  Widget _buildAddPlantCard(BuildContext context, bool isDark) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
@@ -306,6 +384,7 @@ class PlantsScreen extends StatelessWidget {
             width: 2.w,
             style: BorderStyle.solid,
           ),
+          boxShadow: isDark ? AppTheme.darkShadowSmall : AppTheme.shadowSmall,
         ),
         child: Row(
           children: [
@@ -328,14 +407,16 @@ class PlantsScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Add New Plant',
-                    style: textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: textTheme.titleLarge,
                   ),
                   Gap(4.h),
                   Text(
                     'Register a new solar installation',
-                    style: textTheme.bodySmall,
+                    style: textTheme.bodySmall?.copyWith(
+                      color: isDark
+                          ? AppTheme.darkTextSecondary
+                          : AppTheme.textSecondary,
+                    ),
                   ),
                 ],
               ),

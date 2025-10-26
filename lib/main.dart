@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'app/core/services/ad_manager_service.dart';
 import 'app/core/services/api_service.dart';
 import 'app/core/services/theme_service.dart';
 import 'app/core/theme/app_theme.dart';
@@ -19,6 +20,9 @@ void main() async {
 
   // Initialize notification service
   await Get.putAsync(() => NotificationService().init());
+
+  // Initialize AdManager
+  await Get.putAsync(() => AdManager().init());
 
   // Initialize controllers
   Get.put(ThemeController(), permanent: true);

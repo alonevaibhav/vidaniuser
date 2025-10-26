@@ -1,14 +1,53 @@
-// lib/app/modules/main/main_screen.dart
+import 'dart:developer' as developer;
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import '../../core/services/ad_manager_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../view/Cleaning/cleaning_screen.dart';
 import '../view/Plants/plants_screen.dart';
 import '../view/analysis/analysis_screen.dart';
 import '../view/dashboard/dashboard_screen.dart';
 import '../view/profile/profile.dart';
+
+class MainController extends GetxController {
+  var currentIndex = 0.obs;
+
+  void changePage(int index) {
+    currentIndex.value = index;
+
+    // Increment click counter
+    AdManager.to.incrementClick();
+
+    developer.log('Page changed to index $index (clicks: ${AdManager.to.clickCount.value})', name: 'MainController');
+
+    // Check if we should show ad (after 10 clicks)
+    if (AdManager.to.clickCount.value >= 10) {
+      developer.log('10 clicks reached, trying to show ad', name: 'MainController');
+      _tryShowAd();
+    }
+  }
+
+  Future<void> _tryShowAd() async {
+    // Add slight delay so ad doesn't interrupt navigation
+    await Future.delayed(const Duration(milliseconds: 500));
+    await AdOverlayManager.tryShowAd();
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    currentIndex.value = 0;
+    developer.log('MainController initialized', name: 'MainController');
+  }
+
+  @override
+  void onClose() {
+    developer.log('MainController closed', name: 'MainController');
+    super.onClose();
+  }
+}
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -17,16 +56,29 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(MainController());
 
+    // Set overlay context after frame is rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AdOverlayManager.setContext(context);
+      developer.log('MainScreen context set for overlay', name: 'MainScreen');
+    });
+
     return Obx(() => Scaffold(
-      body: IndexedStack(
-        index: controller.currentIndex.value,
-        children: const [
-          DashboardScreen(),
-          PlantsScreen(),
-          CleaningScreen(),
-          AnalysisScreen(),
-          ProfileScreen(),
-        ],
+      body: GestureDetector(
+        // Track taps as clicks
+        onTap: () {
+          AdManager.to.incrementClick();
+          developer.log('Screen tapped (clicks: ${AdManager.to.clickCount.value})', name: 'MainScreen');
+        },
+        child: IndexedStack(
+          index: controller.currentIndex.value,
+          children: const [
+            DashboardScreen(),
+            PlantsScreen(),
+            CleaningScreen(),
+            AnalysisScreen(),
+            ProfileScreen(),
+          ],
+        ),
       ),
       bottomNavigationBar: _buildBottomNav(context, controller),
     ));
@@ -156,20 +208,5 @@ class MainScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-// lib/app/modules/main/main_controller.dart
-class MainController extends GetxController {
-  var currentIndex = 0.obs;
-
-  void changePage(int index) {
-    currentIndex.value = index;
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    // Initialize with dashboard
-    currentIndex.value = 0;
   }
 }

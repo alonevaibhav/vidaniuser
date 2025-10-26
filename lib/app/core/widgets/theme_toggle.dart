@@ -1,4 +1,3 @@
-// lib/app/core/widgets/theme_toggle_button.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../services/theme_service.dart';
@@ -37,7 +36,7 @@ class ThemeToggleButton extends GetView<ThemeController> {
                 controller.isDarkMode ? Icons.dark_mode : Icons.light_mode,
                 key: ValueKey(controller.isDarkMode),
                 color: Colors.white,
-                size: 24,
+                size: 15,
               ),
             ),
           ),
