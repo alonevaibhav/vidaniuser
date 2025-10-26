@@ -13,6 +13,7 @@ import 'apputils/services/Notification/notification_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+
   await GetStorage.init();
 
   // Initialize API Service
